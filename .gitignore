@@ -1,0 +1,6 @@
+/noarch
+/x86_64
+/eclipse-luna-1.0
+/*.src.rpm
+/results_eclipse-luna
+/.build-*.log
