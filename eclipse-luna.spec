@@ -3,8 +3,8 @@
 
 Name:      %{scl_name}
 Version:   1.0
-Release:   1%{?dist}
-Summary:   The %{scl} Software Collection
+Release:   2%{?dist}
+Summary:   The Eclipse Luna Software Collection
 License:   EPL
 URL:       http://copr.fedoraproject.org/coprs/mbooth/%{scl}/
 BuildArch: noarch
@@ -22,7 +22,7 @@ Meta-package that will install everything needed to use the %{scl}
 Software Collection.
 
 %package   release
-Summary:   Repository configuration the %{scl} Software Collection
+Summary:   Repository configuration for the %{scl} Software Collection
 Requires:  fedora-release = 20
 
 %description release
@@ -47,14 +47,11 @@ Software Collection.
 
 %prep
 %setup -c -T
-
 cp -p %{SOURCE0} .
 
 %build
-
-%install
-install -d -m 755 %{buildroot}%{_root_sysconfdir}/yum.repos.d
-cat >> %{buildroot}%{_root_sysconfdir}/yum.repos.d/%{scl}.repo << EOF
+# Yum repository configuration
+cat <<EOF >%{scl}.repo
 [mbooth-%{scl}]
 name=The %{scl} Software Collection for Fedora \$releasever
 baseurl=http://copr-be.cloud.fedoraproject.org/results/mbooth/%{scl}/fedora-\$releasever-\$basearch/
@@ -63,24 +60,142 @@ gpgcheck=0
 enabled=1
 EOF
 
-install -d -m 755 %{buildroot}%{_scl_scripts}/root
-cat >> %{buildroot}%{_scl_scripts}/enable << EOF
+# Enable collection script
+cat <<EOF >enable
+# General variables
 export PATH=%{_bindir}\${PATH:+:\${PATH}}
+
+# Needed by Java Packages Tools to locate java.conf
+export JAVACONFDIRS="%{_sysconfdir}/java:\${JAVACONFDIRS:-/etc/java}"
+
+# Required by XMvn to locate its configuration files
+export XDG_CONFIG_DIRS="%{_sysconfdir}/xdg:\${XDG_CONFIG_DIRS:-/etc/xdg}"
 EOF
-%scl_install
+
+# Java configuration
+cat <<EOF >java.conf
+JAVA_LIBDIR=%{_javadir}
+JNI_LIBDIR=%{_jnidir}
+JVM_ROOT=%{_jvmdir}
+EOF
+
+# XMvn configuration
+cat <<EOF >configuration.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <resolverSettings>
+    <prefixes>
+      <prefix>/opt/rh/%{scl}/root</prefix>
+    </prefixes>
+  </resolverSettings>
+  <installerSettings>
+    <metadataDir>opt/rh/%{scl}/root/usr/share/maven-fragments</metadataDir>
+  </installerSettings>
+  <repositories>
+    <repository>
+      <id>%{scl}-resolve</id>
+      <type>compound</type>
+      <properties>
+        <prefix>opt/rh/%{scl}/root</prefix>
+        <namespace>%{scl}</namespace>
+      </properties>
+      <configuration>
+        <repositories>
+          <repository>base-resolve</repository>
+        </repositories>
+      </configuration>
+    </repository>
+    <repository>
+      <id>resolve-system</id>
+      <type>compound</type>
+      <properties>
+        <prefix>/</prefix>
+      </properties>
+      <configuration>
+        <repositories>
+          <repository>%{scl}-resolve</repository>
+          <repository>base-resolve</repository>
+        </repositories>
+      </configuration>
+    </repository>
+    <repository>
+      <id>install</id>
+      <type>compound</type>
+      <properties>
+        <prefix>opt/rh/%{scl}/root</prefix>
+        <namespace>%{scl}</namespace>
+      </properties>
+      <configuration>
+        <repositories>
+          <repository>base-install</repository>
+        </repositories>
+      </configuration>
+    </repository>
+    <repository>
+      <id>install-raw-pom</id>
+      <type>compound</type>
+      <properties>
+        <prefix>opt/rh/%{scl}/root</prefix>
+        <namespace>%{scl}</namespace>
+      </properties>
+      <configuration>
+        <repositories>
+          <repository>base-raw-pom</repository>
+        </repositories>
+      </configuration>
+    </repository>
+    <repository>
+      <id>install-effective-pom</id>
+      <type>compound</type>
+      <properties>
+        <prefix>opt/rh/%{scl}/root</prefix>
+        <namespace>%{scl}</namespace>
+      </properties>
+      <configuration>
+        <repositories>
+          <repository>base-effective-pom</repository>
+        </repositories>
+      </configuration>
+    </repository>
+  </repositories>
+</configuration>
+EOF
+
+%install
+%{scl_install}
+
+install -d -m 755 %{buildroot}%{_root_sysconfdir}/yum.repos.d
+install -p -m 644 %{scl}.repo %{buildroot}%{_root_sysconfdir}/yum.repos.d/
+
+install -d -m 755 %{buildroot}%{_scl_scripts}
+install -p -m 755 enable %{buildroot}%{_scl_scripts}/
+
+install -d -m 755 %{buildroot}%{_sysconfdir}/java
+install -p -m 644 java.conf %{buildroot}%{_sysconfdir}/java/
+
+install -d -m 755 %{buildroot}%{_sysconfdir}/xdg/xmvn
+install -p -m 644 configuration.xml %{buildroot}%{_sysconfdir}/xdg/xmvn/
 
 %files
-%doc epl-v10.html
+# The base package is empty because it is a meta-package whose sole purpose
+# is to install the whole software collection
 
 %files release
 %config(noreplace) %{_root_sysconfdir}/yum.repos.d/%{scl}.repo
 
 %files runtime
-%scl_files
+%doc epl-v10.html
+%{_sysconfdir}/java/java.conf
+%{_sysconfdir}/xdg/xmvn/configuration.xml
+%{scl_files}
 
 %files build
+%doc epl-v10.html
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %changelog
+* Tue Apr 29 2014 Mat Booth <mat.booth@redhat.com> - 1.0-2
+- Add java and maven configuration to the runtime package.
+
 * Mon Apr 14 2014 Mat Booth <mat.booth@redhat.com> - 1.0-1
 - Initial release of the eclipse-luna software collection metapackage.
