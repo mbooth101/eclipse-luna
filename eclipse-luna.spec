@@ -1,9 +1,11 @@
 %global scl eclipse-luna
 %scl_package %scl
 
+%global __requires_exclude ^%{scl_runtime}$
+
 Name:      %{scl_name}
 Version:   1.0
-Release:   2%{?dist}
+Release:   3%{?dist}
 Summary:   The Eclipse Luna Software Collection
 License:   EPL
 URL:       http://copr.fedoraproject.org/coprs/mbooth/%{scl}/
@@ -40,6 +42,7 @@ Collection.
 %package   build
 Summary:   Build configuration the %{scl} Software Collection
 Requires:  scl-utils-build
+Requires:  %{scl_runtime}
 
 %description build
 Essential build configuration macros for building the %{scl}
@@ -194,6 +197,9 @@ install -p -m 644 configuration.xml %{buildroot}%{_sysconfdir}/xdg/xmvn/
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %changelog
+* Wed Apr 30 2014 Mat Booth <fedora@matbooth.co.uk> - 1.0-3
+- Fix auto-requires on %%{scl_runtime}
+
 * Tue Apr 29 2014 Mat Booth <mat.booth@redhat.com> - 1.0-2
 - Add java and maven configuration to the runtime package.
 
