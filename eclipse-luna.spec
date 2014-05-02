@@ -5,7 +5,7 @@
 
 Name:      %{scl_name}
 Version:   1.0
-Release:   3%{?dist}
+Release:   4%{?dist}
 Summary:   The Eclipse Luna Software Collection
 License:   EPL
 URL:       http://copr.fedoraproject.org/coprs/mbooth/%{scl}/
@@ -80,6 +80,29 @@ cat <<EOF >java.conf
 JAVA_LIBDIR=%{_javadir}
 JNI_LIBDIR=%{_jnidir}
 JVM_ROOT=%{_jvmdir}
+EOF
+
+# Ivy configuration
+cat <<EOF >ivysettings.xml
+<ivysettings>
+  <settings defaultResolver="default"/>
+  <resolvers>
+    <filesystem name="%{scl}-public">
+      <ivy pattern="\${ivy.conf.dir}/lib/[module]/apache-ivy-[revision].xml" />
+      <artifact pattern="%{_datadir}/java/\[artifact].[ext]" />
+    </filesystem>
+    <filesystem name="public">
+      <ivy pattern="\${ivy.conf.dir}/lib/[module]/apache-ivy-[revision].xml" />
+      <artifact pattern="%{_root_datadir}/java/\[artifact].[ext]" />
+    </filesystem>
+    <chain name="main" dual="true">
+      <resolver ref="%{scl}-public"/>
+      <resolver ref="public"/>
+    </chain>
+  </resolvers>
+  <include url="\${ivy.default.settings.dir}/ivysettings-local.xml"/>
+  <include url="\${ivy.default.settings.dir}/ivysettings-default-chain.xml"/>
+</ivysettings>
 EOF
 
 # XMvn configuration
@@ -176,6 +199,9 @@ install -p -m 755 enable %{buildroot}%{_scl_scripts}/
 install -d -m 755 %{buildroot}%{_sysconfdir}/java
 install -p -m 644 java.conf %{buildroot}%{_sysconfdir}/java/
 
+install -d -m 755 %{buildroot}%{_sysconfdir}/ivy
+install -p -m 644 ivysettings.xml %{buildroot}%{_sysconfdir}/ivy/
+
 install -d -m 755 %{buildroot}%{_sysconfdir}/xdg/xmvn
 install -p -m 644 configuration.xml %{buildroot}%{_sysconfdir}/xdg/xmvn/
 
@@ -188,7 +214,8 @@ install -p -m 644 configuration.xml %{buildroot}%{_sysconfdir}/xdg/xmvn/
 
 %files runtime
 %doc epl-v10.html
-%{_sysconfdir}/java/java.conf
+%{_sysconfdir}/java
+%{_sysconfdir}/ivy
 %{_sysconfdir}/xdg/xmvn/configuration.xml
 %{scl_files}
 
@@ -197,6 +224,9 @@ install -p -m 644 configuration.xml %{buildroot}%{_sysconfdir}/xdg/xmvn/
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %changelog
+* Fri May 02 2014 Mat Booth <fedora@matbooth.co.uk> - 1.0-4
+- Add ivy configuration to runtime package.
+
 * Wed Apr 30 2014 Mat Booth <fedora@matbooth.co.uk> - 1.0-3
 - Fix auto-requires on %%{scl_runtime}
 
