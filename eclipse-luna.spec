@@ -5,7 +5,7 @@
 
 Name:      %{scl_name}
 Version:   1.0
-Release:   4%{?dist}
+Release:   5%{?dist}
 Summary:   The Eclipse Luna Software Collection
 License:   EPL
 URL:       http://copr.fedoraproject.org/coprs/mbooth/%{scl}/
@@ -13,11 +13,15 @@ BuildArch: noarch
 
 Source0:   http://www.eclipse.org/legal/epl-v10.html
 
-# List everything in the SCL here
+BuildRequires: scl-utils
+BuildRequires: scl-utils-build
+# This is needed for java directory macros
+BuildRequires: javapackages-tools
+
+# List everything in the SCL here so that installation of
+# only the metapackage brings in the while collection
 Requires: %{scl_name}-release
 Requires: %{scl_name}-runtime
-
-BuildRequires: scl-utils-build
 
 %description
 Meta-package that will install everything needed to use the %{scl}
@@ -42,7 +46,7 @@ Collection.
 %package   build
 Summary:   Build configuration the %{scl} Software Collection
 Requires:  scl-utils-build
-Requires:  %{scl_runtime}
+Requires:  %{scl_name}-runtime
 
 %description build
 Essential build configuration macros for building the %{scl}
@@ -220,14 +224,16 @@ install -p -m 644 configuration.xml %{buildroot}%{_sysconfdir}/xdg/xmvn/
 %{scl_files}
 
 %files build
-%doc epl-v10.html
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %changelog
-* Fri May 02 2014 Mat Booth <fedora@matbooth.co.uk> - 1.0-4
+* Tue Jul 08 2014 Mat Booth <mat.booth@redhat.com> - 1.0-5
+- Add BR on javapackages-tools so that java.conf gets populated correctly.
+
+* Fri May 02 2014 Mat Booth <mat.booth@redhat.com> - 1.0-4
 - Add ivy configuration to runtime package.
 
-* Wed Apr 30 2014 Mat Booth <fedora@matbooth.co.uk> - 1.0-3
+* Wed Apr 30 2014 Mat Booth <mat.booth@redhat.com> - 1.0-3
 - Fix auto-requires on %%{scl_runtime}
 
 * Tue Apr 29 2014 Mat Booth <mat.booth@redhat.com> - 1.0-2
