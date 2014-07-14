@@ -5,7 +5,7 @@
 
 Name:      %{scl_name}
 Version:   1.0
-Release:   5%{?dist}
+Release:   6%{?dist}
 Summary:   The Eclipse Luna Software Collection
 License:   EPL
 URL:       http://copr.fedoraproject.org/coprs/mbooth/%{scl}/
@@ -48,6 +48,17 @@ Summary:   Build configuration the %{scl} Software Collection
 Requires:  scl-utils-build
 Requires:  %{scl_name}-runtime
 
+# We require java 8 to build some parts of eclipse, but the java 8 packages in Fedora 20 do not provide
+# "java" or "java-devel" so java 7 always gets pulled into the build root
+# This is a problem because java 7 has a higher priority than java 8 so java 7 is used at build time
+# instead of 8
+# We work around this by pulling in java 8 here and providing "java" or "java-devel" so that
+# we always have the correct version of java when building packages for the scl
+Requires:  java-1.8.0-openjdk
+Requires:  java-1.8.0-openjdk-devel
+Provides:  java = 1:1.8.0
+Provides:  java-devel = 1:1.8.0
+
 %description build
 Essential build configuration macros for building the %{scl}
 Software Collection.
@@ -71,6 +82,8 @@ EOF
 cat <<EOF >enable
 # General variables
 export PATH=%{_bindir}\${PATH:+:\${PATH}}
+export MANPATH=%{_mandir}:\${MANPATH}
+export INFOPATH=%{_infodir}\${INFOPATH:+:\${INFOPATH}}
 
 # Needed by Java Packages Tools to locate java.conf
 export JAVACONFDIRS="%{_sysconfdir}/java:\${JAVACONFDIRS:-/etc/java}"
@@ -209,6 +222,14 @@ install -p -m 644 ivysettings.xml %{buildroot}%{_sysconfdir}/ivy/
 install -d -m 755 %{buildroot}%{_sysconfdir}/xdg/xmvn
 install -p -m 644 configuration.xml %{buildroot}%{_sysconfdir}/xdg/xmvn/
 
+# Misc other directories we should also own
+install -d -m 755 %{buildroot}%{_jnidir}
+install -d -m 755 %{buildroot}%{_javadir}
+install -d -m 755 %{buildroot}%{_javadocdir}
+install -d -m 755 %{buildroot}%{_datadir}/maven-effective-poms
+install -d -m 755 %{buildroot}%{_datadir}/maven-fragments
+install -d -m 755 %{buildroot}%{_datadir}/maven-poms
+
 %files
 # The base package is empty because it is a meta-package whose sole purpose
 # is to install the whole software collection
@@ -220,13 +241,23 @@ install -p -m 644 configuration.xml %{buildroot}%{_sysconfdir}/xdg/xmvn/
 %doc epl-v10.html
 %{_sysconfdir}/java
 %{_sysconfdir}/ivy
-%{_sysconfdir}/xdg/xmvn/configuration.xml
+%{_jnidir}
+%{_javadir}
+%{_javadocdir}
+%{_datadir}/maven-effective-poms
+%{_datadir}/maven-fragments
+%{_datadir}/maven-poms
 %{scl_files}
 
 %files build
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %changelog
+* Mon Jul 14 2014 Mat Booth <mat.booth@redhat.com> - 1.0-6
+- Fix directory ownership problems
+- Make sure java 8 is used at build time for scl packages
+- Fix man and info path vars
+
 * Tue Jul 08 2014 Mat Booth <mat.booth@redhat.com> - 1.0-5
 - Add BR on javapackages-tools so that java.conf gets populated correctly.
 
