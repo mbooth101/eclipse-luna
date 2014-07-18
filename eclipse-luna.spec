@@ -5,7 +5,7 @@
 
 Name:      %{scl_name}
 Version:   1.0
-Release:   6%{?dist}
+Release:   7%{?dist}
 Summary:   The Eclipse Luna Software Collection
 License:   EPL
 URL:       http://copr.fedoraproject.org/coprs/mbooth/%{scl}/
@@ -18,10 +18,14 @@ BuildRequires: scl-utils-build
 # This is needed for java directory macros
 BuildRequires: javapackages-tools
 
-# List everything in the SCL here so that installation of
-# only the metapackage brings in the while collection
+# List everything in the SCL here so that installation of only the metapackage brings in
+# everything we need
 Requires: %{scl_name}-release
 Requires: %{scl_name}-runtime
+Requires: %{scl_name}-eclipse-pde
+Requires: %{scl_name}-eclipse-jdt
+Requires: %{scl_name}-eclipse-jgit
+Requires: %{scl_name}-eclipse-egit
 
 %description
 Meta-package that will install everything needed to use the %{scl}
@@ -253,6 +257,9 @@ install -d -m 755 %{buildroot}%{_datadir}/maven-poms
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %changelog
+* Thu Jul 17 2014 Mat Booth <mat.booth@redhat.com> - 1.0-7
+- Add requires for PDE/JDT/JGit/EGit to main metapackage
+
 * Mon Jul 14 2014 Mat Booth <mat.booth@redhat.com> - 1.0-6
 - Fix directory ownership problems
 - Make sure java 8 is used at build time for scl packages

@@ -8,7 +8,7 @@ set -e
 #
 
 # Get an NVR with the SCL name prefixed
-VERREL=`fedpkg --dist f21 verrel 2>/dev/null`
+VERREL=$(fedpkg --dist f21 verrel 2>/dev/null | grep $(basename $(pwd)))
 VERREL=eclipse-luna-${VERREL#eclipse-luna-}
 
 # Generate an SRPM
