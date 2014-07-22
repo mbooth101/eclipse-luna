@@ -5,7 +5,7 @@
 
 Name:      %{scl_name}
 Version:   1.0
-Release:   7%{?dist}
+Release:   8%{?dist}
 Summary:   The Eclipse Luna Software Collection
 License:   EPL
 URL:       http://copr.fedoraproject.org/coprs/mbooth/%{scl}/
@@ -26,6 +26,12 @@ Requires: %{scl_name}-eclipse-pde
 Requires: %{scl_name}-eclipse-jdt
 Requires: %{scl_name}-eclipse-jgit
 Requires: %{scl_name}-eclipse-egit
+Requires: %{scl_name}-eclipse-subclipse
+Requires: %{scl_name}-eclipse-subclipse-graph
+Requires: %{scl_name}-eclipse-collabnet-merge
+Requires: %{scl_name}-eclipse-cdt
+Requires: %{scl_name}-eclipse-cdt-parsers
+Requires: %{scl_name}-eclipse-cdt-llvm
 
 %description
 Meta-package that will install everything needed to use the %{scl}
@@ -257,6 +263,9 @@ install -d -m 755 %{buildroot}%{_datadir}/maven-poms
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %changelog
+* Tue Jul 22 2014 Mat Booth <mat.booth@redhat.com> - 1.0-8
+- Add requires for Subclipse and CDT to main metapackage
+
 * Thu Jul 17 2014 Mat Booth <mat.booth@redhat.com> - 1.0-7
 - Add requires for PDE/JDT/JGit/EGit to main metapackage
 
