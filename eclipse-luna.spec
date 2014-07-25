@@ -5,7 +5,7 @@
 
 Name:      %{scl_name}
 Version:   1.0
-Release:   8%{?dist}
+Release:   9%{?dist}
 Summary:   The Eclipse Luna Software Collection
 License:   EPL
 URL:       http://copr.fedoraproject.org/coprs/mbooth/%{scl}/
@@ -13,8 +13,10 @@ BuildArch: noarch
 
 Source0:   http://www.eclipse.org/legal/epl-v10.html
 
+# Standard SCL build requirements
 BuildRequires: scl-utils
 BuildRequires: scl-utils-build
+
 # This is needed for java directory macros
 BuildRequires: javapackages-tools
 
@@ -26,12 +28,37 @@ Requires: %{scl_name}-eclipse-pde
 Requires: %{scl_name}-eclipse-jdt
 Requires: %{scl_name}-eclipse-jgit
 Requires: %{scl_name}-eclipse-egit
+Requires: %{scl_name}-eclipse-egit-mylyn
 Requires: %{scl_name}-eclipse-subclipse
 Requires: %{scl_name}-eclipse-subclipse-graph
 Requires: %{scl_name}-eclipse-collabnet-merge
 Requires: %{scl_name}-eclipse-cdt
 Requires: %{scl_name}-eclipse-cdt-parsers
 Requires: %{scl_name}-eclipse-cdt-llvm
+Requires: %{scl_name}-eclipse-mylyn-builds-hudson
+Requires: %{scl_name}-eclipse-mylyn-context-cdt
+Requires: %{scl_name}-eclipse-mylyn-context-java
+Requires: %{scl_name}-eclipse-mylyn-context-pde
+Requires: %{scl_name}-eclipse-mylyn-context-team
+Requires: %{scl_name}-eclipse-mylyn-docs-epub
+Requires: %{scl_name}-eclipse-mylyn-docs-htmltext
+Requires: %{scl_name}-eclipse-mylyn-docs-wikitext
+Requires: %{scl_name}-eclipse-mylyn-tasks-bugzilla
+Requires: %{scl_name}-eclipse-mylyn-tasks-trac
+Requires: %{scl_name}-eclipse-mylyn-tasks-web
+Requires: %{scl_name}-eclipse-mylyn-versions-cvs
+Requires: %{scl_name}-eclipse-mylyn-versions-git
+Requires: %{scl_name}-eclipse-mylyn-versions-subclipse
+Requires: %{scl_name}-eclipse-changelog
+Requires: %{scl_name}-eclipse-gcov
+Requires: %{scl_name}-eclipse-gprof
+Requires: %{scl_name}-eclipse-manpage
+Requires: %{scl_name}-eclipse-oprofile
+Requires: %{scl_name}-eclipse-perf
+Requires: %{scl_name}-eclipse-quickrex
+Requires: %{scl_name}-eclipse-rpm-editor
+Requires: %{scl_name}-eclipse-systemtap
+Requires: %{scl_name}-eclipse-valgrind
 
 %description
 Meta-package that will install everything needed to use the %{scl}
@@ -247,7 +274,7 @@ install -d -m 755 %{buildroot}%{_datadir}/maven-poms
 %files release
 %config(noreplace) %{_root_sysconfdir}/yum.repos.d/%{scl}.repo
 
-%files runtime
+%files runtime -f filesystem
 %doc epl-v10.html
 %{_sysconfdir}/java
 %{_sysconfdir}/ivy
@@ -263,6 +290,10 @@ install -d -m 755 %{buildroot}%{_datadir}/maven-poms
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %changelog
+* Fri Jul 25 2014 Mat Booth <mat.booth@redhat.com> - 1.0-9
+- Fix unowned man page directories
+- Add requires for Mylyn/Linuxtools to main metapackage
+
 * Tue Jul 22 2014 Mat Booth <mat.booth@redhat.com> - 1.0-8
 - Add requires for Subclipse and CDT to main metapackage
 
