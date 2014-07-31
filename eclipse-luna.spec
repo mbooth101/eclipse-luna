@@ -5,7 +5,7 @@
 
 Name:      %{scl_name}
 Version:   1.0
-Release:   9%{?dist}
+Release:   10%{?dist}
 Summary:   The Eclipse Luna Software Collection
 License:   EPL
 URL:       http://copr.fedoraproject.org/coprs/mbooth/%{scl}/
@@ -57,7 +57,9 @@ Requires: %{scl_name}-eclipse-oprofile
 Requires: %{scl_name}-eclipse-perf
 Requires: %{scl_name}-eclipse-quickrex
 Requires: %{scl_name}-eclipse-rpm-editor
+Requires: %{scl_name}-eclipse-shelled
 Requires: %{scl_name}-eclipse-systemtap
+Requires: %{scl_name}-eclipse-testng
 Requires: %{scl_name}-eclipse-valgrind
 
 %description
@@ -290,6 +292,9 @@ install -d -m 755 %{buildroot}%{_datadir}/maven-poms
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %changelog
+* Wed Jul 30 2014 Mat Booth <mat.booth@redhat.com> - 1.0-10
+- Add requires for TestNG/ShellEd to main metapackage
+
 * Fri Jul 25 2014 Mat Booth <mat.booth@redhat.com> - 1.0-9
 - Fix unowned man page directories
 - Add requires for Mylyn/Linuxtools to main metapackage
