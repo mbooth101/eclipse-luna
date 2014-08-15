@@ -5,7 +5,7 @@
 
 Name:      %{scl_name}
 Version:   1.0
-Release:   10%{?dist}
+Release:   11%{?dist}
 Summary:   The Eclipse Luna Software Collection
 License:   EPL
 URL:       http://copr.fedoraproject.org/coprs/mbooth/%{scl}/
@@ -52,6 +52,7 @@ Requires: %{scl_name}-eclipse-mylyn-versions-subclipse
 Requires: %{scl_name}-eclipse-changelog
 Requires: %{scl_name}-eclipse-gcov
 Requires: %{scl_name}-eclipse-gprof
+Requires: %{scl_name}-eclipse-linuxtools
 Requires: %{scl_name}-eclipse-manpage
 Requires: %{scl_name}-eclipse-oprofile
 Requires: %{scl_name}-eclipse-perf
@@ -129,6 +130,9 @@ export JAVACONFDIRS="%{_sysconfdir}/java:\${JAVACONFDIRS:-/etc/java}"
 
 # Required by XMvn to locate its configuration files
 export XDG_CONFIG_DIRS="%{_sysconfdir}/xdg:\${XDG_CONFIG_DIRS:-/etc/xdg}"
+
+# Required to locate shared libs inside the collection
+export LD_LIBRARY_PATH="%{_prefix}/lib:%{_prefix}/lib64${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}"
 EOF
 
 # Java configuration
@@ -292,6 +296,9 @@ install -d -m 755 %{buildroot}%{_datadir}/maven-poms
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %changelog
+* Fri Aug 15 2014 Mat Booth <mat.booth@redhat.com> - 1.0-11
+- Add LD_LIBRARY_PATH to collection enable script
+
 * Wed Jul 30 2014 Mat Booth <mat.booth@redhat.com> - 1.0-10
 - Add requires for TestNG/ShellEd to main metapackage
 
