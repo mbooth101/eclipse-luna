@@ -7,6 +7,8 @@ set -e
 # Should be run from a cloned dist-git repo of a package (instead of "fedpkg build")
 #
 
+sudo yum install eclipse-luna-build -y --nogpgcheck
+
 # Get an NVR with the SCL name prefixed
 VERREL=$(fedpkg --dist f21 verrel 2>/dev/null | grep $(basename $(pwd)))
 VERREL=eclipse-luna-${VERREL#eclipse-luna-}

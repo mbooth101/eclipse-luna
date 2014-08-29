@@ -5,7 +5,7 @@
 
 Name:      %{scl_name}
 Version:   1.0
-Release:   11%{?dist}
+Release:   12%{?dist}
 Summary:   The Eclipse Luna Software Collection
 License:   EPL
 URL:       http://copr.fedoraproject.org/coprs/mbooth/%{scl}/
@@ -43,6 +43,7 @@ Requires: %{scl_name}-eclipse-mylyn-context-team
 Requires: %{scl_name}-eclipse-mylyn-docs-epub
 Requires: %{scl_name}-eclipse-mylyn-docs-htmltext
 Requires: %{scl_name}-eclipse-mylyn-docs-wikitext
+Requires: %{scl_name}-eclipse-mylyn-ide
 Requires: %{scl_name}-eclipse-mylyn-tasks-bugzilla
 Requires: %{scl_name}-eclipse-mylyn-tasks-trac
 Requires: %{scl_name}-eclipse-mylyn-tasks-web
@@ -62,6 +63,13 @@ Requires: %{scl_name}-eclipse-shelled
 Requires: %{scl_name}-eclipse-systemtap
 Requires: %{scl_name}-eclipse-testng
 Requires: %{scl_name}-eclipse-valgrind
+Requires: %{scl_name}-eclipse-webtools-common
+Requires: %{scl_name}-eclipse-webtools-dali
+Requires: %{scl_name}-eclipse-webtools-javaee
+Requires: %{scl_name}-eclipse-webtools-jsf
+Requires: %{scl_name}-eclipse-webtools-servertools
+Requires: %{scl_name}-eclipse-webtools-sourceediting
+Requires: %{scl_name}-eclipse-webtools-webservices
 
 %description
 Meta-package that will install everything needed to use the %{scl}
@@ -269,6 +277,7 @@ install -p -m 644 configuration.xml %{buildroot}%{_sysconfdir}/xdg/xmvn/
 install -d -m 755 %{buildroot}%{_jnidir}
 install -d -m 755 %{buildroot}%{_javadir}
 install -d -m 755 %{buildroot}%{_javadocdir}
+install -d -m 755 %{buildroot}%{_datadir}/appdata
 install -d -m 755 %{buildroot}%{_datadir}/maven-effective-poms
 install -d -m 755 %{buildroot}%{_datadir}/maven-fragments
 install -d -m 755 %{buildroot}%{_datadir}/maven-poms
@@ -287,6 +296,7 @@ install -d -m 755 %{buildroot}%{_datadir}/maven-poms
 %{_jnidir}
 %{_javadir}
 %{_javadocdir}
+%{_datadir}/appdata
 %{_datadir}/maven-effective-poms
 %{_datadir}/maven-fragments
 %{_datadir}/maven-poms
@@ -296,6 +306,9 @@ install -d -m 755 %{buildroot}%{_datadir}/maven-poms
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %changelog
+* Fri Aug 29 2014 Mat Booth <mat.booth@redhat.com> - 1.0-12
+- Add requires for webtools to main metapackage
+
 * Fri Aug 15 2014 Mat Booth <mat.booth@redhat.com> - 1.0-11
 - Add LD_LIBRARY_PATH to collection enable script
 
