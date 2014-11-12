@@ -7,7 +7,9 @@ set -e
 # Should be run from a cloned dist-git repo of a package (instead of "fedpkg build")
 #
 
-sudo yum install eclipse-luna-build -y --nogpgcheck
+echo "%scl eclipse-luna" > macros.eclipse-luna-config
+echo "%scl_vendor rh" >> macros.eclipse-luna-config
+sudo mv macros.eclipse-luna-config /etc/rpm/macros.eclipse-luna-config
 
 # Get an NVR with the SCL name prefixed
 VERREL=$(fedpkg --dist f21 verrel 2>/dev/null | grep $(basename $(pwd)))
@@ -20,3 +22,4 @@ fedpkg --dist f21 srpm 2>/dev/null
 scp ${VERREL}.src.rpm ${USER}@fedorapeople.org:~/public_html/copr/.
 copr-cli build --nowait "mbooth/eclipse-luna" http://${USER}.fedorapeople.org/copr/${VERREL}.src.rpm
 
+sudo rm /etc/rpm/macros.eclipse-luna-config
