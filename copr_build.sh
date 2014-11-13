@@ -8,7 +8,7 @@ set -e
 #
 
 # Name of the collection we are building for
-COLLECTION=eclipse-luna
+COLLECTION=eclipse-mars
 
 # Set some build-time macros for the SCL
 BUILD_MACRO_FILE=macros.eclipse-metapackage-config
