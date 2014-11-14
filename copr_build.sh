@@ -18,6 +18,7 @@ sudo mv $BUILD_MACRO_FILE /etc/rpm/$BUILD_MACRO_FILE
 
 # Get an NVR with the SCL name prefixed
 VERREL=$(fedpkg --dist f21 verrel 2>/dev/null | grep $(basename $(pwd)))
+VERREL=${VERREL#eclipse-metapackage-}
 VERREL=$COLLECTION-${VERREL#$COLLECTION-}
 
 # Generate an SRPM
