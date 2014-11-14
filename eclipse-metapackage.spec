@@ -2,13 +2,9 @@
 %global scl_vendor mbooth
 %scl_package %scl
 
-# Work around rhbz#1163909
-# See: https://bugzilla.redhat.com/show_bug.cgi?id=1163909
-%global _sysconfdir %{_scl_root}/etc
-
 Name:      %{scl_name}
 Version:   1.0
-Release:   1%{?dist}
+Release:   2%{?dist}
 Summary:   The Eclipse Mars Software Collection
 License:   EPL
 URL:       http://copr.fedoraproject.org/coprs/%{scl_vendor}/%{scl}/
@@ -105,12 +101,15 @@ cat <<EOF >configuration.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
   <resolverSettings>
+    <metadataRepositories>
+      <repository>%{_scl_root}/usr/share/maven-metadata</repository>
+    </metadataRepositories>
     <prefixes>
       <prefix>%{_scl_root}</prefix>
     </prefixes>
   </resolverSettings>
   <installerSettings>
-    <metadataDir>opt/%{scl_vendor}/%{scl}/root/usr/share/maven-fragments</metadataDir>
+    <metadataDir>opt/%{scl_vendor}/%{scl}/root/usr/share/maven-metadata</metadataDir>
   </installerSettings>
   <repositories>
     <repository>
@@ -214,8 +213,7 @@ install -d -m 755 %{buildroot}%{_datadir}/maven-poms
 %files runtime -f filesystem
 %doc epl-v10.html
 %{scl_files}
-%{_sysconfdir}/java
-%{_sysconfdir}/ivy
+%{_sysconfdir}
 %dir %{_javadir}
 %dir %{_javadocdir}
 %dir %{_datadir}/appdata
@@ -228,6 +226,10 @@ install -d -m 755 %{buildroot}%{_datadir}/maven-poms
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %changelog
+* Fri Nov 14 2014 Mat Booth <mat.booth@redhat.com> - 1.0-2
+- SCL's _sysconfdir is now under /etc instead of /opt
+- Fix maven artifact resolution
+
 * Thu Nov 13 2014 Mat Booth <mat.booth@redhat.com> - 1.0-1
 - Initial release of the eclipse-mars software collection metapackage.
 
