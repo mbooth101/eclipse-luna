@@ -4,11 +4,10 @@
 
 Name:      %{scl_name}
 Version:   1.0
-Release:   2%{?dist}
+Release:   3%{?dist}
 Summary:   The Eclipse Mars Software Collection
 License:   EPL
 URL:       http://copr.fedoraproject.org/coprs/%{scl_vendor}/%{scl}/
-BuildArch: noarch
 
 Source0:   http://www.eclipse.org/legal/epl-v10.html
 
@@ -52,7 +51,7 @@ cp -p %{SOURCE0} .
 # Enable collection script
 cat <<EOF >enable
 # General variables
-export PATH=%{_bindir}\${PATH:+:\${PATH}}
+export PATH=%{_bindir}:%{_sbindir}\${PATH:+:\${PATH}}
 export MANPATH=%{_mandir}:\${MANPATH}
 export INFOPATH=%{_infodir}\${INFOPATH:+:\${INFOPATH}}
 
@@ -226,6 +225,10 @@ install -d -m 755 %{buildroot}%{_datadir}/maven-poms
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %changelog
+* Mon Dec 08 2014 Mat Booth <mat.booth@redhat.com> - 1.0-3
+- Make archful so that we own lib64 dirs
+- Add sbin to SCL's PATH
+
 * Fri Nov 14 2014 Mat Booth <mat.booth@redhat.com> - 1.0-2
 - SCL's _sysconfdir is now under /etc instead of /opt
 - Fix maven artifact resolution

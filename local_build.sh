@@ -28,6 +28,5 @@ fedpkg --dist f21 srpm 2>/dev/null
 sudo rm /etc/rpm/$BUILD_MACRO_FILE
 
 # Upload and build
-scp ${VERREL}.src.rpm ${USER}@fedorapeople.org:~/public_html/copr/.
-copr-cli build --nowait "mbooth/$COLLECTION" http://${USER}.fedorapeople.org/copr/${VERREL}.src.rpm
+mock -r $COLLECTION --no-clean --no-cleanup-after --rebuild ${VERREL}.src.rpm
 
