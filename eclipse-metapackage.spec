@@ -4,7 +4,7 @@
 
 Name:      %{scl_name}
 Version:   1.0
-Release:   3%{?dist}
+Release:   4%{?dist}
 Summary:   The Eclipse Mars Software Collection
 License:   EPL
 URL:       http://copr.fedoraproject.org/coprs/%{scl_vendor}/%{scl}/
@@ -212,7 +212,8 @@ install -d -m 755 %{buildroot}%{_datadir}/maven-poms
 %files runtime -f filesystem
 %doc epl-v10.html
 %{scl_files}
-%{_sysconfdir}
+%{_sysconfdir}/ivy
+%{_sysconfdir}/java
 %dir %{_javadir}
 %dir %{_javadocdir}
 %dir %{_datadir}/appdata
@@ -225,6 +226,9 @@ install -d -m 755 %{buildroot}%{_datadir}/maven-poms
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %changelog
+* Thu Dec 18 2014 Mat Booth <mat.booth@redhat.com> - 1.0-4
+- Update for upstream fixes to scl_files macro
+
 * Mon Dec 08 2014 Mat Booth <mat.booth@redhat.com> - 1.0-3
 - Make archful so that we own lib64 dirs
 - Add sbin to SCL's PATH
