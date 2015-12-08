@@ -2,10 +2,6 @@
 
 This repository contains the source for the Eclipse Software Collections meta-packages.
 
-### Eclipse Mars for Fedora 21
+### Eclipse Neon for Fedora 23
 
-https://copr.fedoraproject.org/coprs/mbooth/eclipse-mars/
-
-### Eclipse Luna for Fedora 20
-
-https://copr.fedoraproject.org/coprs/mbooth/eclipse-luna/
+https://copr.fedoraproject.org/coprs/mbooth/eclipse-neon/
